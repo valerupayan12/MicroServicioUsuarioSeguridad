@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.MicroUsuarioSeguridad.model.Comuna;
+import com.example.MicroUsuarioSeguridad.model.Cliente;
 import com.example.MicroUsuarioSeguridad.service.ComunaService;
 
 import jakarta.validation.Valid;
@@ -25,23 +25,23 @@ public class ComunaController {
     private ComunaService comunaService;
 
     @GetMapping
-    public List<Comuna> listarComunas(){
+    public List<Cliente> listarComunas(){
         return comunaService.getComunas();
     }
     
    //agregar
    @PostMapping
-   public Comuna agregarComuna(@Valid @RequestBody Comuna comuna){
+   public Cliente agregarComuna(@Valid @RequestBody Cliente comuna){
          return comunaService.saveComunas(comuna);
    }
     //buscar
     @GetMapping("{id_comuna}")
-    public Comuna buscarComuna(@PathVariable int id_comuna){
+    public Cliente buscarComuna(@PathVariable int id_comuna){
         return comunaService.getComunaById(id_comuna);
     }
     //actualizar
     @PutMapping("{id_comuna}")
-    public int actualizarComuna(@PathVariable int id_comuna, @Valid @RequestBody Comuna comuna){
+    public int actualizarComuna(@PathVariable int id_comuna, @Valid @RequestBody Cliente comuna){
         return comunaService.updateComuna(comuna);
     }
     //eliminar
