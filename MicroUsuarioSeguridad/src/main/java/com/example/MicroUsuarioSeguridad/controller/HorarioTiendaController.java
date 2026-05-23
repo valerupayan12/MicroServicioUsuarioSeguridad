@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.MicroUsuarioSeguridad.model.HorarioTienda;
-import com.example.MicroUsuarioSeguridad.service.HorarioTiendaService;
+import com.example.MicroUsuarioSeguridad.model.Genero;
+import com.example.MicroUsuarioSeguridad.service.ClienteService;
 
 import jakarta.validation.Valid;
 
@@ -22,26 +22,26 @@ import jakarta.validation.Valid;
 @RequestMapping("api/v2/horarios_tienda")
 public class HorarioTiendaController {
     @Autowired
-        private HorarioTiendaService horarioTiendaService;
+        private ClienteService horarioTiendaService;
 
         @GetMapping
-        public List<HorarioTienda> listarHorariosTienda(){
+        public List<Genero> listarHorariosTienda(){
             return horarioTiendaService.getHorarioTienda();
         }
 
     //agregar
     @PostMapping
-    public HorarioTienda agregarHorarioTienda(@Valid @RequestBody HorarioTienda horarioTienda){
+    public Genero agregarHorarioTienda(@Valid @RequestBody Genero horarioTienda){
         return horarioTiendaService.saveHorarioTienda(horarioTienda);
      }
     //buscar
     @GetMapping("/{id_horario_tienda}")
-    public HorarioTienda buscarHorarioTienda(@PathVariable int id_horario_tienda){
+    public Genero buscarHorarioTienda(@PathVariable int id_horario_tienda){
            return horarioTiendaService.getHorarioTiendaById(id_horario_tienda); 
         }
     //actualizar
     @PutMapping("/{id_horario_tienda}")
-    public int actualizarHorarioTienda(@PathVariable int id_horario_tienda, @Valid @RequestBody HorarioTienda horarioTienda){
+    public int actualizarHorarioTienda(@PathVariable int id_horario_tienda, @Valid @RequestBody Genero horarioTienda){
         return horarioTiendaService.updateHorarioTienda(horarioTienda);
     }
     //eliminar
