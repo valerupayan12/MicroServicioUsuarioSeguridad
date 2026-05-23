@@ -1,35 +1,33 @@
 package com.example.MicroUsuarioSeguridad.dto;
 
-import com.example.MicroUsuarioSeguridad.model.Cliente;
-import com.example.MicroUsuarioSeguridad.model.RolPermiso;
-
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-public class TiendaDTO {
-        @Data
+public class ClienteDTO {
+
+    @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
 
-       @NotNull(message = "El ID de la tienda es obligatorio")
-        private int id_tienda;
+        @NotBlank(message = "El RUT es obligatorio")
+        @Size(min = 3, max = 10, message = "El ID debe tener entre 3 y 10 caracteres")
+        private int id_cliente;
 
         @NotBlank(message = "El nombre es obligatorio")
         @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
                  message = "El nombre debe contener al menos 2 palabras")
         private String nombre;
 
-        @NotBlank(message = "La direccion es obligatoria")
+        @NotBlank(message = "El email es obligatorio")
         @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
-                 message = "La direccion debe contener al menos 2 palabras")
-        private String direccion;
+                 message = "El email debe contener al menos 2 palabras")
+        private String email;
 
-
+        @NotNull(message = "El ID del género es obligatorio")
+        private Long generoId;
     }
 
     /**
@@ -39,11 +37,12 @@ public class TiendaDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Response {
-        private int id_Tienda;
+        private int id_cliente;
         private String nombre;
-        private String direccion;
-        private Cliente comuna;
-        private RolPermiso region;
+        private String email;
+        private String telefono;
+        private ComunaDTO comuna;
+        private String direccion_envio;
+        private GeneroDTO genero; //objeto obtenido consultando microservicio genero
     }
-
 }

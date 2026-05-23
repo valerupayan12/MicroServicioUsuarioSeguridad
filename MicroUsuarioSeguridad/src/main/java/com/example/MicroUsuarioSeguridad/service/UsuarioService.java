@@ -1,5 +1,5 @@
 package com.example.MicroUsuarioSeguridad.service;
 
-public class TiendaService {
+public class UsuarioService {
 
 }
