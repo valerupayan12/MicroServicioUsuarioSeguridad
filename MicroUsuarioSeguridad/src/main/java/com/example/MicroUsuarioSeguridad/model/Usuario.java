@@ -11,23 +11,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity //se conecta con entidad
-@Table(name="tienda") //la tabla nombre persona
+@Table(name="usuario") //la tabla nombre persona
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-    
-public class Tienda {
+
+//con genero normalizado
+public class Usuario {
     @Id
-    private int id_tienda;
+    private int id_usuario;
+    @ManyToOne
+    @JoinColumn(name="id_genero", nullable=false)
+    private Genero genero;
     @Column(name="nombre", nullable=false)
     private String nombre;
-    @Column(name="direccion", nullable=false)
-    private String direccion;
+    @Column(name="email", nullable=false)
+    private String email;
     @ManyToOne
-    @JoinColumn(name="id_comuna", nullable=false)
-    private Comuna comuna;
-    @ManyToOne
-    @JoinColumn(name="id_region", nullable=false)
-    private Region region;
+    @JoinColumn(name="id_rol", nullable=false)
+    private RolPermiso rol;
+    @Column(name="id_tienda", nullable=false)
+    private int idTienda;
+    private boolean estado;
 
 }
