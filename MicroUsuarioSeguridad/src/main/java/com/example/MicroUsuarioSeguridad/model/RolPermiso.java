@@ -25,6 +25,24 @@ public class RolPermiso {
     private String modulo;
     @Column(name="accion", nullable =false)
     private String accion;
+    public class Response {
+    }
+    public class Request {
+
+        public Object getId_permiso() {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getId_permiso'");
+        }
+
+        public int getId_rol() {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getId_rol'");
+        }
+    }
+    public void setId_permiso(Object id_permiso) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setId_permiso'");
+    }
 
 
 }

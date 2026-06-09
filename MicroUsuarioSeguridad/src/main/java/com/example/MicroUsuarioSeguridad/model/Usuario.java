@@ -33,5 +33,21 @@ public class Usuario {
     @Column(name="id_tienda", nullable=false)
     private int idTienda;
     private boolean estado;
+    public void setTelefono(Object telefono) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setTelefono'");
+    }
+    public void setCorreo(Object correo) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setCorreo'");
+    }
+    public String getCorreo() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCorreo'");
+    }
+    public String getTelefono() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getTelefono'");
+    }
 
 }
