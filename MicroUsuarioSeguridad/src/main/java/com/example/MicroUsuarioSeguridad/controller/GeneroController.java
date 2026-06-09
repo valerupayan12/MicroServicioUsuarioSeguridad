@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.MicroUsuarioSeguridad.model.Genero;
+import com.example.MicroUsuarioSeguridad.service.GeneroService;
 
 import jakarta.validation.Valid;
 

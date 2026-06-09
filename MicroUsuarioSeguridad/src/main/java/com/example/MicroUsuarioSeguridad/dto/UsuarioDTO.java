@@ -1,6 +1,6 @@
 package com.example.MicroUsuarioSeguridad.dto;
 
-import com.example.MicroUsuarioSeguridad.model.Comuna;
+
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
