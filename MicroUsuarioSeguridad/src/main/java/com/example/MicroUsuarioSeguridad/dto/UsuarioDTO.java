@@ -1,6 +1,6 @@
 package com.example.MicroUsuarioSeguridad.dto;
 
-import com.example.MicroUsuarioSeguridad.model.Comuna;
+
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -30,6 +30,16 @@ public class UsuarioDTO {
 
         @NotNull(message = "El ID del género es obligatorio")
         private Long generoId;
+
+        public Object getTelefono() {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getTelefono'");
+        }
+
+        public Object getCorreo() {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getCorreo'");
+        }
     }
 
     /**
@@ -43,7 +53,7 @@ public class UsuarioDTO {
         private String nombre;
         private String email;
         private String telefono;
-        private Comuna comuna;
+        private ComunaDTO comuna;
         private String direccion_envio;
         private GeneroDTO genero; //objeto obtenido consultando microservicio genero
     }
