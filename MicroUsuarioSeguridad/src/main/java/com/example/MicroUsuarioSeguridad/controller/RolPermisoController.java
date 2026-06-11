@@ -3,55 +3,72 @@ package com.example.MicroUsuarioSeguridad.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.MicroUsuarioSeguridad.model.RolPermiso;
 import com.example.MicroUsuarioSeguridad.service.RolPermisoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-@SuppressWarnings("unused")
 @RestController
-@RequestMapping ("api/v2/roles_permisos")
+@RequestMapping("api/v2/roles_permisos")
+@Tag(name = "Rol-Permiso Controller", description = "Endpoints para gestionar las relaciones entre roles y permisos")
 public class RolPermisoController {
+
     @Autowired
     private RolPermisoService rolPermisoService;
 
     @GetMapping
-    public List<RolPermiso> listarRolesPermisos(){
-        return rolPermisoService.getRolPermisos();
+    @Operation(summary = "Listar todas las relaciones Rol-Permiso", description = "Devuelve la lista completa de asignaciones")
+    @ApiResponse(responseCode = "200", description = "Lista obtenida correctamente")
+    public ResponseEntity<List<RolPermiso>> listarRolesPermisos(){
+        return ResponseEntity.ok(rolPermisoService.listar());
     }
-    //agregar
+
     @PostMapping
-    public RolPermiso agregarRolPermiso(@Valid @RequestBody RolPermiso rolPermiso){
-        return rolPermisoService.saveRolPermiso(rolPermiso);
+    @Operation(summary = "Asignar un permiso a un rol", description = "Crea una nueva asociación entre un rol y un permiso")
+    @ApiResponse(responseCode = "201", description = "Asociación creada exitosamente")
+    public ResponseEntity<RolPermiso> agregarRolPermiso(@Valid @RequestBody RolPermiso rolPermiso){
+        return new ResponseEntity<RolPermiso>(rolPermisoService.guardar(rolPermiso), HttpStatus.CREATED);
     }
 
-    //buscar
     @GetMapping("/{id_rol_permiso}")
-    public RolPermiso buscarRolPermiso(@PathVariable int id_rol_permiso){
-        return rolPermisoService.getRolPermiso(id_rol_permiso);
+    @Operation(summary = "Buscar Rol-Permiso por ID", description = "Obtiene los detalles de una asignación específica")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Asignación encontrada"),
+        @ApiResponse(responseCode = "404", description = "No se encontró el registro", content = @Content)
+    })
+    public ResponseEntity<RolPermiso> buscarRolPermiso(
+            @Parameter(description = "ID de la relación Rol-Permiso", example = "1")
+            @PathVariable Integer id_rol_permiso){
+        return ResponseEntity.ok(rolPermisoService.buscarPorId(id_rol_permiso));
     }
 
-    //actualizar
     @PutMapping("/{id_rol_permiso}")
-    public RolPermiso actualizarRolPermiso(@PathVariable int id_rol_permiso, @Valid @RequestBody RolPermiso rolPermiso){
-        return rolPermisoService.updateRolPermiso(id_rol_permiso, rolPermiso);
-    }
-    //eliminar
-    @DeleteMapping("/{id_rol_permiso}")
-    public String eliminarRolPermiso(@PathVariable int id_rol_permiso){
-        if (rolPermisoService.deleteRolPermiso(id_rol_permiso)== 1) {
-            return "Rol de permiso eliminado correctamente";
-        }
-        return "Error al eliminar el rol de permiso";
+    @Operation(summary = "Actualizar una relación Rol-Permiso", description = "Modifica los datos de una asignación existente")
+    @ApiResponse(responseCode = "200", description = "Registro actualizado correctamente")
+    public ResponseEntity<RolPermiso> actualizarRolPermiso(
+            @Parameter(description = "ID de la relación a actualizar", example = "1")
+            @PathVariable Integer id_rol_permiso, 
+            @Valid @RequestBody RolPermiso rolPermiso){
+        return ResponseEntity.ok(rolPermisoService.actualizar(id_rol_permiso, rolPermiso));
     }
 
+    @DeleteMapping("/{id_rol_permiso}")
+    @Operation(summary = "Eliminar una relación Rol-Permiso", description = "Elimina la asignación de un permiso a un rol")
+    @ApiResponse(responseCode = "200", description = "Rol de permiso eliminado correctamente")
+    public ResponseEntity<String> eliminarRolPermiso(
+            @Parameter(description = "ID de la relación a eliminar", example = "1")
+            @PathVariable Integer id_rol_permiso){
+        rolPermisoService.eliminar(id_rol_permiso);
+        return ResponseEntity.ok("Rol de permiso eliminado correctamente");
+    }
 }

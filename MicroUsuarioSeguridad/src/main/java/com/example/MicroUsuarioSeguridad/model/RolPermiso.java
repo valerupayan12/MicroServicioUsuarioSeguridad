@@ -1,48 +1,35 @@
 package com.example.MicroUsuarioSeguridad.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity //se conecta con entidad
-@Table(name="rolpermiso") //la tabla nombre persona
-@Data //antes de data ahora va lo de arriba
+@Entity
+@Table(name = "rolpermiso")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-
-
-
 public class RolPermiso {
+
     @Id
-    private int id_rol;//pk
-    @Column(name="nombre_rol", nullable =false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "id_rol", nullable = false)
+    private Integer id_rol;
+
+    @Column(name = "id_permiso", nullable = false)
+    private Integer id_permiso;
+
+    @Column(name = "nombre_rol", nullable = false)
     private String nombre_rol;
-    @Column(name="modulo", nullable =false)
+
+    @Column(name = "modulo", nullable = false)
     private String modulo;
-    @Column(name="accion", nullable =false)
+
+    @Column(name = "accion", nullable = false)
     private String accion;
-    public class Response {
-    }
-    public class Request {
-
-        public Object getId_permiso() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'getId_permiso'");
-        }
-
-        public int getId_rol() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'getId_rol'");
-        }
-    }
-    public void setId_permiso(Object id_permiso) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setId_permiso'");
-    }
 
 
 }

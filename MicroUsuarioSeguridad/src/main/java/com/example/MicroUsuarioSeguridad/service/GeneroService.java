@@ -1,45 +1,18 @@
 package com.example.MicroUsuarioSeguridad.service;
 
+import com.example.MicroUsuarioSeguridad.dto.GeneroDTO;
+
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+public interface GeneroService {
 
-import com.example.MicroUsuarioSeguridad.model.Genero;
-import com.example.MicroUsuarioSeguridad.repository.GeneroRepository;
+    List<GeneroDTO.Response> listarGeneros();
 
-import jakarta.transaction.Transactional;
+    GeneroDTO.Response obtenerGeneroPorId(Integer id_genero);
 
+    GeneroDTO.Response crearGenero(GeneroDTO.Request request);
 
+    GeneroDTO.Response actualizarGenero(Integer id_genero, GeneroDTO.Request request);
 
-@Service
-@Transactional
-public class GeneroService {
-    @Autowired
-    //llama repository
-    private GeneroRepository generoRepository;
-    //obtener todo
-    public List<Genero> getGenero(){
-        return generoRepository.obtenerGenero();
-    }
-    
-    //obtener por id
-    public Genero getGenero(int id_genero){
-        return generoRepository.obtenerGeneroPorId(id_genero);
-    }
-    
-    //eliminar x id_gemero
-    public int deleteGenero(int id_genero){
-        return generoRepository.eliminarGenero(id_genero);
-    }
-    //guardar genero
-    public Genero saveGenero(Genero genero){
-        return generoRepository.guardarGenero(genero);
-    }
-    //modificar genero 
-    public int updateGenero(Genero genero){
-        return generoRepository.modificarGenero(genero); 
-
-
-    }
+    void eliminarGenero(Integer id_genero);
 }

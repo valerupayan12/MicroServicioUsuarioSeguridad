@@ -1,23 +1,25 @@
 package com.example.MicroUsuarioSeguridad.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity //se conecta con entidad
-@Table(name="genero") //la tabla nombre persona
-@Data //antes de data ahora va lo de arriba
-@AllArgsConstructor
+@Entity
+@Table(name = "genero")
+@Data
 @NoArgsConstructor
-//normalizado
+@AllArgsConstructor
 public class Genero {
-    @Id
-    private int id_genero;
-    @Column(name="descripcion", nullable =false)
-    private String descripcion;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id_genero;
+
+    @NotBlank(message = "El nombre del género es obligatorio")
+    @Column(name = "nombre_genero", nullable = false, unique = true, length = 50)
+    private String nombre_genero;
 }
