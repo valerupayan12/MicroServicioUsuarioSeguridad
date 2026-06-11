@@ -1,71 +1,48 @@
 package com.example.MicroUsuarioSeguridad.service.impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.example.MicroUsuarioSeguridad.model.RolPermiso;
-import com.example.MicroUsuarioSeguridad.model.RolPermiso.Response;
-import com.example.MicroUsuarioSeguridad.repository.RolPermisoRepository;
-
 import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import com.example.MicroUsuarioSeguridad.model.RolPermiso;
+import com.example.MicroUsuarioSeguridad.repository.RolPermisoRepository; // Ajusta según tu repo
+import com.example.MicroUsuarioSeguridad.service.RolPermisoService;
+import lombok.RequiredArgsConstructor;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
-
-public class RolPermisoServiceimpl implements RolPermisoService {
+public class RolPermisoServiceImpl implements RolPermisoService {
 
     private final RolPermisoRepository rolPermisoRepository;
 
-    @Transactional(readOnly = true)
-    public List<RolPermiso.Response> listarTodos() {
-        return rolPermisoRepository.findAll().stream().map(this::mapToResponse).collect(Collectors.toList());
+    @Override
+    public List<RolPermiso> listar() {
+        return rolPermisoRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
-    public RolPermiso.Response buscarPorId(int id) {
-        RolPermiso r = rolPermisoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("RolPermiso no encontrado con id: " + id));
-        return mapToResponse(r);
+    @Override
+    public RolPermiso guardar(RolPermiso rolPermiso) {
+        return rolPermisoRepository.save(rolPermiso);
     }
 
-    @Transactional
-    public RolPermiso.Response crear(RolPermiso.Request request) {
-        RolPermiso r = new RolPermiso();
-        r.setId_rol(request.getId_rol());
-        r.setId_permiso(request.getId_permiso());
-        return mapToResponse(rolPermisoRepository.save(r));
+    @Override
+    public RolPermiso buscarPorId(Integer id) {
+        return rolPermisoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rol-Permiso no encontrado"));
     }
 
-    @Transactional
-    public RolPermiso.Response actualizar1(int id, RolPermiso.Request request) {
-        RolPermiso r = rolPermisoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("RolPermiso no encontrado con id: " + id));
-        r.setId_rol(request.getId_rol());
-        r.setId_permiso(request.getId_permiso());
-        return mapToResponse(rolPermisoRepository.save(r));
+    @Override
+    public RolPermiso actualizar(Integer id, RolPermiso rolPermiso) {
+        RolPermiso existente = rolPermisoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rol-Permiso no encontrado"));
+        
+        // Aquí seteas los campos que necesites actualizar, por ejemplo:
+        // existente.setRol(rolPermiso.getRol());
+        // existente.setPermiso(rolPermiso.getPermiso());
+        
+        return rolPermisoRepository.save(existente);
     }
 
-    @Transactional
-    public RolPermiso.Response actualizar(int id, RolPermiso.Request request) {
-        RolPermiso r = rolPermisoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("RolPermiso no encontrado con id: " + id));
-        r.setId_rol(request.getId_rol());
-        r.setId_permiso(request.getId_permiso());
-        return mapToResponse(rolPermisoRepository.save(r));
-    }
-
-    private Response mapToResponse(RolPermiso save) {
-        throw new UnsupportedOperationException("Unimplemented method 'mapToResponse'");
-    }
-
-    @Transactional
-    public void eliminar(int id) {
-        if (!rolPermisoRepository.existsById(id))
-            throw new RuntimeException("RolPermiso no encontrado con id: " + id);
+    @Override
+    public void eliminar(Integer id) {
         rolPermisoRepository.deleteById(id);
     }
 }

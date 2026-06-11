@@ -1,69 +1,86 @@
 package com.example.MicroUsuarioSeguridad.controller;
 
-import java.util.List;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.support.GenericConversionService;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.example.MicroUsuarioSeguridad.model.Genero;
+import com.example.MicroUsuarioSeguridad.dto.GeneroDTO;
 import com.example.MicroUsuarioSeguridad.service.GeneroService;
 
-import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/generos")
+@RequestMapping("/api/v1/generos")
+@Tag(name = "Genero", description = "Operaciones relacionadas con género")
+@RequiredArgsConstructor
 public class GeneroController {
 
-    @Autowired
-    private GeneroService generoService;
+    private final GeneroService generoService;
 
-    // LISTAR GENEROS
     @GetMapping
-    public List<Genero> listarGeneros() {
-
-        return GenericConversionService.getGenero();
+    @Operation(summary = "Listar géneros", description = "Obtiene la lista de todos los géneros")
+    @ApiResponse(responseCode = "200", description = "Lista obtenida exitosamente",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = GeneroDTO.Response.class)))
+    public ResponseEntity<List<GeneroDTO.Response>> listarGeneros() {
+        return ResponseEntity.ok(generoService.listarGeneros());
     }
 
-    // AGREGAR GENERO
+    @GetMapping("/{id}")
+    @Operation(summary = "Obtener género por ID", description = "Obtiene un género según su ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Género encontrado",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = GeneroDTO.Response.class))),
+            @ApiResponse(responseCode = "404", description = "Género no encontrado")
+    })
+    public ResponseEntity<GeneroDTO.Response> obtenerGeneroPorId(@PathVariable Integer id) {
+        return ResponseEntity.ok(generoService.obtenerGeneroPorId(id));
+    }
+
     @PostMapping
-    public Genero agregarGenero(@Valid @RequestBody Genero genero) {
-
-        return generoService.saveGenero(genero);
+    @Operation(summary = "Crear género", description = "Registra un nuevo género")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Género creado exitosamente",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = GeneroDTO.Response.class))),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos")
+    })
+    public ResponseEntity<GeneroDTO.Response> crearGenero(@Valid @RequestBody GeneroDTO.Request request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(generoService.crearGenero(request));
     }
 
-    // BUSCAR GENERO POR ID
-    @GetMapping("{id_genero}")
-    public Genero buscarGenero(@PathVariable int id_genero) {
-
-        return generoService.getGenero(id_genero);
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar género", description = "Actualiza un género existente por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Género actualizado exitosamente",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = GeneroDTO.Response.class))),
+            @ApiResponse(responseCode = "404", description = "Género no encontrado"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos")
+    })
+    public ResponseEntity<GeneroDTO.Response> actualizarGenero(
+            @PathVariable Integer id,
+            @Valid @RequestBody GeneroDTO.Request request) {
+        return ResponseEntity.ok(generoService.actualizarGenero(id, request));
     }
 
-    // ACTUALIZAR GENERO
-    @PutMapping("{id_genero}")
-    public int actualizarGenero(@PathVariable int id_genero,
-                                @Valid @RequestBody Genero genero) {
-
-        genero.setId_genero(id_genero);
-
-        return generoService.updateGenero(genero);
-    }
-
-    // ELIMINAR GENERO
-    @DeleteMapping("{id_genero}")
-    public String eliminarGenero(@PathVariable int id_genero) {
-
-        if (generoService.deleteGenero(id_genero) == 1) {
-            return "Genero eliminado correctamente";
-        }
-
-        return "Error al eliminar el genero";
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar género", description = "Elimina un género por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Género eliminado exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Género no encontrado")
+    })
+    public ResponseEntity<Void> eliminarGenero(@PathVariable Integer id) {
+        generoService.eliminarGenero(id);
+        return ResponseEntity.noContent().build();
     }
 }
