@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class RolPermisoServiceImpl implements RolPermisoService {
+public class RolPermisoServiceimpl implements RolPermisoService {
 
     private final RolPermisoRepository rolPermisoRepository;
 
