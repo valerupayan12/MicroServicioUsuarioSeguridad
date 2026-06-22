@@ -42,4 +42,9 @@ public class Usuario {
 
     @Column(name="estado", nullable=false)
     private boolean estado;
+
+    public void setId(int i) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setId'");
+    }
 }
