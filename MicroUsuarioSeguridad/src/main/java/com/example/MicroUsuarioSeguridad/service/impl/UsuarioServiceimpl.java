@@ -35,20 +35,20 @@ public class UsuarioServiceimpl implements UsuarioService {
     }
 
     @Override
-    public UsuarioDTO.Response guardar(UsuarioDTO request) { // <-- Cambiado a UsuarioDTO
+    public UsuarioDTO.Response guardar(UsuarioDTO.Request request) {
         Usuario usuario = new Usuario();
 
         usuario.setNombre(request.getNombre());
         usuario.setCorreo(request.getCorreo());
         usuario.setTelefono(request.getTelefono());
         usuario.setIdTienda(request.getId_tienda());
-        usuario.setEstado(request.getEstado());
+        usuario.setEstado(request.getEstado() != null ? request.getEstado() : false);
 
         return toResponse(usuarioRepository.save(usuario));
     }
 
     @Override
-    public UsuarioDTO.Response actualizar(Integer id, UsuarioDTO request) { // <-- Cambiado a UsuarioDTO
+    public UsuarioDTO.Response actualizar(Integer id, UsuarioDTO.Request request) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
@@ -56,7 +56,7 @@ public class UsuarioServiceimpl implements UsuarioService {
         usuario.setCorreo(request.getCorreo());
         usuario.setTelefono(request.getTelefono());
         usuario.setIdTienda(request.getId_tienda());
-        usuario.setEstado(request.getEstado());
+        usuario.setEstado(request.getEstado() != null ? request.getEstado() : false);
 
         return toResponse(usuarioRepository.save(usuario));
     }

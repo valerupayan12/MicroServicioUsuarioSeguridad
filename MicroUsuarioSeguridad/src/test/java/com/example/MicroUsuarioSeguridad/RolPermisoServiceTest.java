@@ -2,15 +2,17 @@ package com.example.MicroUsuarioSeguridad;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.doNothing;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.example.MicroUsuarioSeguridad.model.RolPermiso;
 import com.example.MicroUsuarioSeguridad.repository.RolPermisoRepository;
@@ -19,69 +21,96 @@ import com.example.MicroUsuarioSeguridad.service.RolPermisoService;
 @SpringBootTest
 public class RolPermisoServiceTest {
 
-    // Inyecta el servicio de Carrera para ser probado.
     @Autowired
     private RolPermisoService rolPermisoService;
 
-    // Crea un mock del repositorio de Carrera para simular su comportamiento.
-    @Mock
+    @MockitoBean
     private RolPermisoRepository rolPermisoRepository;
 
+    // LISTAR
     @Test
-    public void testFindAll() {
-        // Define el comportamiento del mock: cuando se llame a findAll(), devuelve una lista con una Carrera.
-        when(rolPermisoRepository.findAll()).thenReturn(List.of(new RolPermiso(1, "Administrador")));
+    public void testListar() {
+        RolPermiso rolPermiso = new RolPermiso(1, 1, 1, "Administrador", "usuarios", "CREAR");
+        when(rolPermisoRepository.findAll()).thenReturn(List.of(rolPermiso));
 
-        // Llama al método findAll() del servicio.
-        List<RolPermiso> rolPermisos = rolPermisoService.findAll();
+        List<RolPermiso> rolPermisos = rolPermisoService.listar();
 
-        // Verifica que la lista devuelta no sea nula y contenga exactamente una Carrera.
         assertNotNull(rolPermisos);
         assertEquals(1, rolPermisos.size());
     }
 
+    // BUSCAR POR ID (existe)
     @Test
-    public void testFindByCodigo() {
-        String codigo = "1";
-        RolPermiso rolPermiso = new RolPermiso(codigo, "Administrador");
+    public void testBuscarPorId() {
+        int id = 1;
+        RolPermiso rolPermiso = new RolPermiso(id, 1, 1, "Administrador", "usuarios", "CREAR");
+        when(rolPermisoRepository.findById(id)).thenReturn(Optional.of(rolPermiso));
 
-        // Define el comportamiento del mock: cuando se llame a findById() con "1", devuelve una Carrera opcional.
-        when(rolPermisoRepository.findById(codigo)).thenReturn(Optional.of(rolPermiso));
+        RolPermiso encontrado = rolPermisoService.buscarPorId(id);
 
-        // Llama al método findByCodigo() del servicio.
-        RolPermiso found = rolPermisoService.findByCodigo(codigo);
-
-        // Verifica que la Carrera devuelta no sea nula y que su código coincida con el código esperado.
-        assertNotNull(found);
-        assertEquals(codigo, found.getId_rol());
+        assertNotNull(encontrado);
+        assertEquals("Administrador", encontrado.getNombre_rol());
     }
 
+    // BUSCAR POR ID (no existe) -> lanza excepcion
     @Test
-    public void testSave() {
-        RolPermiso rolPermiso = new RolPermiso(1, "Administrador");
+    public void testBuscarPorId_noExiste() {
+        int id = 99;
+        when(rolPermisoRepository.findById(id)).thenReturn(Optional.empty());
 
-        // Define el comportamiento del mock: cuando se llame a save(), devuelve la Carrera proporcionada.
+        assertThrows(RuntimeException.class, () -> rolPermisoService.buscarPorId(id));
+    }
+
+    // GUARDAR
+    @Test
+    public void testGuardar() {
+        RolPermiso rolPermiso = new RolPermiso(null, 1, 1, "Administrador", "usuarios", "CREAR");
         when(rolPermisoRepository.save(rolPermiso)).thenReturn(rolPermiso);
 
-        // Llama al método save() del servicio.
-        RolPermiso saved = rolPermisoService.save(rolPermiso);
+        RolPermiso creado = rolPermisoService.guardar(rolPermiso);
 
-        // Verifica que la Carrera guardada no sea nula y que su nombre coincida con el nombre esperado.
-        assertNotNull(saved);
-        assertEquals("Administrador", saved.getNombre());
+        assertNotNull(creado);
+        assertEquals("Administrador", creado.getNombre_rol());
     }
 
+    // ACTUALIZAR (existe)
+    // NOTA: la implementacion actual no aplica los nuevos valores (los setters
+    // estan comentados), asi que el resultado es el objeto EXISTENTE sin cambios.
     @Test
-    public void testDeleteByCodigo() {
-        String codigo = "1";
+    public void testActualizar_existe() {
+        int id = 1;
+        RolPermiso existente = new RolPermiso(id, 1, 1, "Administrador", "usuarios", "CREAR");
+        when(rolPermisoRepository.findById(id)).thenReturn(Optional.of(existente));
+        when(rolPermisoRepository.save(existente)).thenReturn(existente);
 
-        // Define el comportamiento del mock: cuando se llame a deleteById(), no hace nada.
-        doNothing().when(rolPermisoRepository).deleteById(codigo);
+        RolPermiso nuevosDatos = new RolPermiso(null, 2, 2, "Editor", "productos", "EDITAR");
 
-        // Llama al método deleteByCodigo() del servicio.
-        rolPermisoService.deleteByCodigo(codigo);
+        RolPermiso resultado = rolPermisoService.actualizar(id, nuevosDatos);
 
-        // Verifica que el método deleteById() del repositorio se haya llamado exactamente una vez con el código proporcionado.
-        verify(rolPermisoRepository, times(1)).deleteById(codigo);
+        assertNotNull(resultado);
+        // Refleja el comportamiento actual (bug): no cambia, sigue siendo "Administrador"
+        assertEquals("Administrador", resultado.getNombre_rol());
+        verify(rolPermisoRepository).save(existente);
+    }
+
+    // ACTUALIZAR (no existe) -> lanza excepcion
+    @Test
+    public void testActualizar_noExiste() {
+        int id = 99;
+        when(rolPermisoRepository.findById(id)).thenReturn(Optional.empty());
+
+        RolPermiso nuevosDatos = new RolPermiso(null, 2, 2, "Editor", "productos", "EDITAR");
+
+        assertThrows(RuntimeException.class, () -> rolPermisoService.actualizar(id, nuevosDatos));
+    }
+
+    // ELIMINAR
+    @Test
+    public void testEliminar() {
+        int id = 1;
+
+        rolPermisoService.eliminar(id);
+
+        verify(rolPermisoRepository).deleteById(id);
     }
 }

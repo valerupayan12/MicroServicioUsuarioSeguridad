@@ -48,29 +48,4 @@ public class UsuarioDTO {
         private Integer id_tienda;
         private Boolean estado;
     }
-
-    public String getNombre() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getNombre'");
-    }
-
-    public String getCorreo() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCorreo'");
-    }
-
-    public String getTelefono() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTelefono'");
-    }
-
-    public int getId_tienda() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getId_tienda'");
-    }
-
-    public boolean getEstado() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEstado'");
-    }
 }

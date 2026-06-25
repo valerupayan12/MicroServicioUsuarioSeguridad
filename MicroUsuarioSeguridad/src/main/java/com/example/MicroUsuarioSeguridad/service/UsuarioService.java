@@ -5,14 +5,14 @@ import com.example.MicroUsuarioSeguridad.dto.UsuarioDTO;
 
 public interface UsuarioService {
     List<UsuarioDTO.Response> listar();
-    
+
     UsuarioDTO.Response buscarPorId(Integer id);
-    
-    // Recibe el DTO plano y devuelve el Response interno
-    UsuarioDTO.Response guardar(UsuarioDTO request); 
-    
-    // Recibe el DTO plano y devuelve el Response interno
-    UsuarioDTO.Response actualizar(Integer id, UsuarioDTO request); 
-    
+
+    // Recibe el DTO de entrada (Request) y devuelve el Response
+    UsuarioDTO.Response guardar(UsuarioDTO.Request request);
+
+    // Recibe el DTO de entrada (Request) y devuelve el Response
+    UsuarioDTO.Response actualizar(Integer id, UsuarioDTO.Request request);
+
     void eliminar(Integer id);
 }
